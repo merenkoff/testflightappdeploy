@@ -10,6 +10,7 @@ scriptPath=$(dirname $(readlink $0))
 targetSDK="iphoneos5.0"
 developerIdentity="iPhone Developer: Your name (XXXXXXXXX)"
 provisioningProfile="$scriptPath/your_mobileprovision.mobileprovision"
+distributionList=""
 
 testFlightAPIToken="api_token"
 testFlightTeamToken="team_token"
