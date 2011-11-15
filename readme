@@ -1,0 +1,11 @@
+Automated deploying iOS builds to TestFlight (http://testflightapp.com).
+
+Script written in bash. I'm not so good at it so please send your propositions and improvements.
+Will be useful to launch right after your VCS commit or push.
+
+How to use
+----------
+1. First edit config.sh file and enter your API tokens and stuff.
+2. Then create a symbolic link (ln -s source dest) for testflightappdeploy.sh script in your project directory (where is *.xcodeproj file located). Also add this link rights for execution (chmod +x file).
+3. Don't forget to put your *.mobileprovision file to the script directory.
+4. That's all, run ./link.sh from your project directory.
