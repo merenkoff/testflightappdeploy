@@ -88,7 +88,7 @@ zip -r $zipdSYMFileName $dSYMFileName >> $logPath
 echo "\nUploading to TestFlight...\n"
 echo "\nUploading to TestFlight..." >> $logPath
 
-curl http://testflightapp.com/api/builds.json -F file="@$ipaFileName" -F dsym="@$zipdSYMFileName" -F api_token="$testFlightAPIToken" -F team_token="$testFlightTeamToken" -F notes="This build was uploaded via the upload API." -F notify=True -F distribution_lists="$distributionList" >> $logPath
+curl http://testflightapp.com/api/builds.json -F file="@$ipaFileName" -F dsym="@$zipdSYMFileName" -F api_token="$testFlightAPIToken" -F team_token="$testFlightTeamToken" -F notes="This build was uploaded via the upload API." -F notify=True -F distribution_lists="$distributionLists" >> $logPath
 
 echo "\nDone"
 echo "Done" >> $logPath
