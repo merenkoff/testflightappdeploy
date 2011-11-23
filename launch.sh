@@ -24,7 +24,7 @@ projectName=${xcodeprojPath/\/*\//} # Remove path
 projectName=${projectName/.*/} # Remove extension
 
 # Build dirs
-buildDir=$scriptPath/$projectName
+buildDir=$scriptPath/builds/$projectName
 tempBuildDir=$projectDir/build
 
 # File names
