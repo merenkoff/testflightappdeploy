@@ -24,14 +24,12 @@ projectName=${xcodeprojPath/\/*\//} # Remove path
 projectName=${projectName/.*/} # Remove extension
 
 # Build dirs
-buildDir=$scriptPath/builds/$projectName
+buildDir=$scriptPath/builds/$productName
 tempBuildDir=$projectDir/build
 
 # File names
-appFileName=$buildDir/$projectName.app
-ipaFileName=$buildDir/$projectName.ipa
-dSYMFileName=$appFileName.dSYM
-zipdSYMFileName=$dSYMFileName.zip
+#$buildDir/$productName.app
+ipaFileName=$buildDir/$productName.ipa
 
 # Log
 logDir=$buildDir/logs
@@ -47,16 +45,17 @@ mkdir -p $logDir
 # Hello everybody
 echo "Automated iOS project deploy script for TestFlightApp.com"
 
-echo "Building project..."
-echo "Building project..." >> $logPath
+echo "Building project..." | tee -a $file
 
 xcodebuild -target "$projectName" -sdk "$targetSDK" -configuration Release CONFIGURATION_BUILD_DIR="$buildDir" >> $logPath
+
+# Make app filename
+appFileName=$(ls -1 "$buildDir" | grep ".*\.app$" | head -n1)
 
 # Check if build succeeded
 if [ $? != 0 ]
 then
-  echo "Encountered an error"
-  echo "Encountered an error" >> $logPath
+  echo "Encountered an error" | tee -a $file
   exit 1  
 fi
 
@@ -67,28 +66,22 @@ rm -rf $tempBuildDir
 # Sign app
 ###########################################################
 
-echo "Signing..."
-echo "Signing..." >> $logPath
+echo "Signing..." | tee -a $file
 
 /usr/bin/xcrun -sdk "$targetSDK" PackageApplication -v "$appFileName" -o "$ipaFileName" --sign "$developerIdentity" --embed "$provisioningProfilePath/$provisioningProfileFileName" >> $logPath
 
 # Check if signing succeeded
 if [ $? != 0 ]
 then
-  echo "Encountered an error"
-  echo "Encountered an error" >> $logPath
+  echo "Encountered an error" | tee -a $file
   exit 1  
 fi
-
-# Zip dSYM
-zip -r $zipdSYMFileName $dSYMFileName >> $logPath
 
 ###########################################################
 # Upload to TestFlightApp
 ###########################################################
 
-echo "Uploading to TestFlight..."
-echo "Uploading to TestFlight..." >> $logPath
+echo "Uploading to TestFlight..." | tee -a $file
 
 read -p "Build notes: "
 buildNotes=$REPLY
@@ -96,4 +89,4 @@ buildNotes=$REPLY
 read -p "Notify testers from $distributionLists? y/n: "
 [[ $REPLY = "y" ]] && notify=True || notify=False
 
-curl http://testflightapp.com/api/builds.json --progress-bar -F file="@$ipaFileName" -F dsym="@$zipdSYMFileName" -F api_token="$testFlightAPIToken" -F team_token="$testFlightTeamToken" -F notes="$buildNotes" -F notify=$notify -F distribution_lists="$distributionLists" >> $logPath
+curl http://testflightapp.com/api/builds.json --progress-bar -F file="@$ipaFileName" -F api_token="$testFlightAPIToken" -F team_token="$testFlightTeamToken" -F notes="$buildNotes" -F notify=$notify -F distribution_lists="$distributionLists" >> $logPath
