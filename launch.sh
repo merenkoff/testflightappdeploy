@@ -24,12 +24,12 @@ projectName=${xcodeprojPath/\/*\//} # Remove path
 projectName=${projectName/.*/} # Remove extension
 
 # Build dirs
-buildDir=$scriptPath/builds/$productName
+buildDir=$scriptPath/builds/$projectName
 tempBuildDir=$projectDir/build
 
 # File names
 #$buildDir/$productName.app
-ipaFileName=$buildDir/$productName.ipa
+ipaFileName=$buildDir/$projectName.ipa
 
 # Log
 logDir=$buildDir/logs
@@ -50,7 +50,7 @@ echo "Building project..." | tee -a $file
 xcodebuild -target "$projectName" -sdk "$targetSDK" -configuration Release CONFIGURATION_BUILD_DIR="$buildDir" >> $logPath
 
 # Make app filename
-appFileName=$(ls -1 "$buildDir" | grep ".*\.app$" | head -n1)
+appFileName=$buildDir/$(ls -1 "$buildDir" | grep ".*\.app$" | head -n1)
 
 # Check if build succeeded
 if [ $? != 0 ]
