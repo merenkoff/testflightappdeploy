@@ -66,9 +66,9 @@ rm -rf $tempBuildDir
 # Sign app
 ###########################################################
 
-echo "Signing..." | tee -a $file
+echo "Packaging and signing..." | tee -a $file
 
-/usr/bin/xcrun -sdk "$targetSDK" PackageApplication -v "$appFileName" -o "$ipaFileName" --sign "$developerIdentity" --embed "$provisioningProfilePath/$provisioningProfileFileName" >> $logPath
+/usr/bin/xcrun -sdk "$targetSDK" PackageApplication -v "$appFileName" -o "$ipaFileName" >> $logPath
 
 # Check if signing succeeded
 if [ $? != 0 ]

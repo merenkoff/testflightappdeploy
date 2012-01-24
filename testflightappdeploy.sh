@@ -10,12 +10,11 @@
 scriptPath="/path/to/testflightappdeploy"
 
 # Xcode stuff
-targetSDK="iphoneos5.0"
+targetSDK="iphoneos"
 
 # Provisioning
 developerIdentity="iPhone Developer: Your name (XXX)"
-provisioningProfilePath="/Users/XXX/Library/MobileDevice/Provisioning Profiles"
-provisioningProfileFileName="XXX.mobileprovision"
+provisioningProfileFileName="XXX.mobileprovision" # Choose one from ~/Library/MobileDevice/Provisioning Profiles/
 
 # TestFlightApp stuff
 testFlightAPIToken="XXX"
