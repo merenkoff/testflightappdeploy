@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/php
+<?php
 
 ###########################################################
 # Config section
@@ -7,22 +8,18 @@
 ###########################################################
 
 # Paths
-scriptPath="/path/to/testflightappdeploy"
+define('SCRIPT_PATH', 'path/to/testflightappdeploy');
 
 # Xcode stuff
-targetSDK="iphoneos"
-
-# Provisioning
-developerIdentity="iPhone Developer: Your name (XXX)"
-provisioningProfileFileName="XXX.mobileprovision" # Choose one from ~/Library/MobileDevice/Provisioning Profiles/
+define('TARGET_SDK', 'iphoneos');
 
 # TestFlightApp stuff
-testFlightAPIToken="XXX"
-testFlightTeamToken="XXX"
-distributionLists=""
+define('TESTFLIGHT_API_TOKEN', 'xxx');
+define('TESTFLIGHT_TEAM_TOKEN', 'xxx');
+define('TESTFLIGHT_DISTRIBUTION_LISTS', '');
 
 ###########################################################
 # Launch
 ###########################################################
 
-source "$scriptPath/launch.sh"
+require_once(SCRIPT_PATH . '/launch.php');
