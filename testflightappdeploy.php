@@ -7,13 +7,18 @@
 # No slashes after paths please
 ###########################################################
 
-# Paths
+// Paths
 define('SCRIPT_DIR_PATH', 'path/to/testflightappdeploy');
 
-# Xcode stuff
-define('TARGET_SDK', 'iphoneos');
+// Xcode stuff
+// define('TARGET_SDK', 'iphoneos');
 
-# TestFlightApp stuff
+// If left commented script will prompt you for input
+// Useful when using with CI
+// define('DEVELOPER_IDENTITY', '');
+// define('PROV_PROFILE_PATH', '');
+
+// TestFlightApp stuff
 define('TESTFLIGHT_API_TOKEN', 'xxx');
 define('TESTFLIGHT_TEAM_TOKEN', 'xxx');
 define('TESTFLIGHT_DISTRIBUTION_LISTS', '');

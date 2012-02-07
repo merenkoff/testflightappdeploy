@@ -96,77 +96,96 @@ if ( ! file_exists($logDirPath)) mkdir($logDirPath);
 # Identity
 ###########################################################
 
-// Get developer identities
-$developerIdentities = array();
+$developerIdentity;
+if (defined('DEVELOPER_IDENTITY')) {
+	$developerIdentity = DEVELOPER_IDENTITY;
+} else {
+	// Get developer identities
+	$developerIdentities = array();
 
-// Get codesigning identities from keychain
-$output = exec_command('security find-identity -v -p codesigning');
-	
-foreach ($output as $item) {
-	$matches = array();
-	preg_match('/"(?P<identity>.*)"/', $item, $matches);
-	if (isset($matches['identity'])) {
-		$developerIdentities[] = $matches['identity'];
+	// Get codesigning identities from keychain
+	$output = exec_command('security find-identity -v -p codesigning');
+		
+	foreach ($output as $item) {
+		$matches = array();
+		preg_match('/"(?P<identity>.*)"/', $item, $matches);
+		if (isset($matches['identity'])) {
+			$developerIdentities[] = $matches['identity'];
+		}
 	}
-}
-if (empty($developerIdentities)) die_with_error('Couldn\'t find any developer identity');
+	if (empty($developerIdentities)) die_with_error('Couldn\'t find any developer identity');
 
-// Choose identity
-log_message("Choose your identity:");
-for ($i = 0; $i < count($developerIdentities); $i++) {
-	echo ($i + 1) . ') ' . $developerIdentities[$i] . PHP_EOL;
+	// Choose identity
+	log_message("Choose your identity:");
+	for ($i = 0; $i < count($developerIdentities); $i++) {
+		echo ($i + 1) . ') ' . $developerIdentities[$i] . PHP_EOL;
+	}
+
+	$developerIdentityChoice = -1;
+	while ($developerIdentityChoice <= 0 ||
+		   $developerIdentityChoice > count($developerIdentities)) {
+		echo 'Please enter a number (from 1 to ' . count($developerIdentities) . '): ';
+		$developerIdentityChoice = trim(fgets(STDIN));
+	}
+
+	$developerIdentity = $developerIdentities[intval($developerIdentityChoice) - 1];
 }
 
-$developerIdentityChoice = -1;
-while ($developerIdentityChoice <= 0 ||
-	   $developerIdentityChoice > count($developerIdentities)) {
-	echo 'Please enter a number (from 1 to ' . count($developerIdentities) . '): ';
-	$developerIdentityChoice = trim(fgets(STDIN));
-}
-
-$developerIdentity = $developerIdentities[intval($developerIdentityChoice) - 1];
-log_message('Chosen identity "' . $developerIdentity . '"');
+log_message('Using identity "' . $developerIdentity . '"');
 
 ###########################################################
 # Find certificate name
 ###########################################################
 
-// Get pem
-$output = exec_command('security find-certificate -c "' . $developerIdentity . '" -p');
-
-// Remove BEGIN and END OF CERTIFICATE
-unset($output[count($output) - 1]);
-unset($output[0]);
-$pem = implode('', $output);
-
-$provProfilesDirPath = exec_command('cd ~/Library/MobileDevice/Provisioning\ Profiles/ && pwd', TRUE);
-
 $provProfilePath;
-$handle = opendir($provProfilesDirPath);
-if ( ! $handle) die_with_error('Couldn\'t read provisioning profiles directory');
-while (($fileName = readdir($handle)) !== false) {
-	if (pathinfo($fileName, PATHINFO_EXTENSION) != 'mobileprovision') continue;
+if (defined('PROV_PROFILE_PATH')) {
+	$provProfilePath = PROV_PROFILE_PATH;	
+} else {
+	// Get pem
+	$output = exec_command('security find-certificate -c "' . $developerIdentity . '" -p');
 
-	$contents = file_get_contents($provProfilesDirPath . '/' . $fileName);
-	$contents = str_replace("\t", '', $contents);
-	$contents = str_replace("\n", '', $contents);
+	// Remove BEGIN and END OF CERTIFICATE
+	unset($output[count($output) - 1]);
+	unset($output[0]);
+	$pem = implode('', $output);
 
-	$found = strpos($contents, $pem);
-	if ($found !== false) {
-		$provProfilePath = $provProfilesDirPath . '/' . $fileName;
+	$provProfilesDirPath = exec_command('cd ~/Library/MobileDevice/Provisioning\ Profiles/ && pwd', TRUE);
+
+	$provProfilePath;
+	$handle = opendir($provProfilesDirPath);
+	if ( ! $handle) die_with_error('Couldn\'t read provisioning profiles directory');
+	while (($fileName = readdir($handle)) !== false) {
+		if (pathinfo($fileName, PATHINFO_EXTENSION) != 'mobileprovision') continue;
+
+		$contents = file_get_contents($provProfilesDirPath . '/' . $fileName);
+		$contents = str_replace("\t", '', $contents);
+		$contents = str_replace("\n", '', $contents);
+
+		$found = strpos($contents, $pem);
+		if ($found !== false) {
+			$provProfilePath = $provProfilesDirPath . '/' . $fileName;
+		}
 	}
-}
-closedir($handle);
+	closedir($handle);
 
-if ( ! isset($provProfilePath)) die_with_error('Couldn\'t find provisioning profile');
-log_message('Found provisioning profile:' . PHP_EOL . $provProfilePath);
+	if ( ! isset($provProfilePath)) die_with_error('Couldn\'t find provisioning profile');
+}
+
+log_message('Using provisioning profile:' . PHP_EOL . $provProfilePath);
 
 ###########################################################
 # Build project
 ###########################################################
 
+$targetSDK;
+if (defined('TARGET_SDK')) {
+	$targetSDK = TARGET_SDK;
+} else {
+	$targetSDK = 'iphoneos';
+}
+
 log_message("\033[32mBuilding project...\033[37m");
-exec_command('xcodebuild -target "' . $projectName . '" -sdk "' . TARGET_SDK . '" -configuration Release CONFIGURATION_BUILD_DIR="' . $projectBuildDirPath . '" >> "' . $logPath . '"', FALSE, FALSE, TRUE);
+exec_command('xcodebuild -target "' . $projectName . '" -sdk "' . $targetSDK . '" -configuration Release CONFIGURATION_BUILD_DIR="' . $projectBuildDirPath . '" >> "' . $logPath . '"', FALSE, FALSE, TRUE);
 
 // Make app filename
 $appPath;
