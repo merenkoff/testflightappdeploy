@@ -13,12 +13,20 @@ ini_set('display_errors', '0');
 # Helper function
 ###########################################################
 
+$logPath = date('Y.m.d-H.i.s') . '.log';
+
 /**
  * @param string $message
  */
 function log_message($message)
 {
-	echo PHP_EOL . $message . PHP_EOL;
+	$message = PHP_EOL . $message . PHP_EOL;
+	echo $message;
+
+	global $logPath;
+	$handle = fopen($logPath, 'a');
+	if ($handle) fwrite($handle, $message);
+	fclose($handle);
 }
 
 /**
@@ -85,8 +93,9 @@ $tempBuildDirPath = $projectDirPath . '/build';
 // IPA
 $ipaPath = $projectBuildDirPath . '/' . $projectName . '.ipa';
 
+// Logs
 $logDirPath = $projectBuildDirPath . '/logs';
-$logPath = $logDirPath . '/' . date('Y.m.d-H.i.s') . '.log';
+$logPath = $logDirPath . '/' . $logPath;
 
 if ( ! file_exists($buildDirPath)) mkdir($buildDirPath);
 if ( ! file_exists($projectBuildDirPath)) mkdir($projectBuildDirPath);
