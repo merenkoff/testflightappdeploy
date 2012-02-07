@@ -13,7 +13,7 @@ ini_set('display_errors', '0');
 # Helper function
 ###########################################################
 
-$logPath = date('Y.m.d-H.i.s') . '.log';
+$logPath = './' . date('Y.m.d-H.i.s') . '.log';
 
 /**
  * @param string $message
@@ -59,7 +59,7 @@ function exec_command($command, $returnAsString, $dieIfEmpty = TRUE, $echoComman
 # Start
 ###########################################################
 
-log_message("\033[32mAutomated iOS project deploy script for TestFlightApp.com\033[37m");
+log_message("\033[32mAutomated iOS project deploy script for TestFlightApp.com\033[37m\n$projectName");
 
 ###########################################################
 # Dirs
@@ -95,7 +95,7 @@ $ipaPath = $projectBuildDirPath . '/' . $projectName . '.ipa';
 
 // Logs
 $logDirPath = $projectBuildDirPath . '/logs';
-$logPath = $logDirPath . '/' . $logPath;
+$logPath = $logDirPath . '/' . date('Y.m.d-H.i.s') . '.log';
 
 if ( ! file_exists($buildDirPath)) mkdir($buildDirPath);
 if ( ! file_exists($projectBuildDirPath)) mkdir($projectBuildDirPath);
