@@ -228,4 +228,4 @@ $notify = $notify == 'y' ? 'true' : 'false';
 $command = 'curl http://testflightapp.com/api/builds.json --progress-bar -F file="@' . $ipaPath . '" -F api_token="' . TESTFLIGHT_API_TOKEN . '" -F team_token="' . TESTFLIGHT_TEAM_TOKEN . '" -F notes="' . $buildNotes . '" -F notify=' . $notify . ' -F distribution_lists="' . TESTFLIGHT_DISTRIBUTION_LISTS . '" >> "' . $logPath . '"';
 exec($command);
 
-log_message('Done.');
+log_message("\033[32mDone.\033[37m");
