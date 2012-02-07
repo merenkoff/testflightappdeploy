@@ -206,7 +206,7 @@ exec_command('rm -rf ' . $tempBuildDirPath, FALSE, FALSE);
 ###########################################################
 
 log_message("\033[32mPackaging and signing...\033[37m");
-exec_command('/usr/bin/xcrun -sdk "' . TARGET_SDK . '" PackageApplication -v "' . $appPath . '" -o "' . $ipaPath . '" --sign "' . $developerIdentity . '" --embed "' . $provProfilePath . '" >> "' . $logPath . '"', FALSE, FALSE, TRUE);
+exec_command('/usr/bin/xcrun -sdk "' . $targetSDK . '" PackageApplication -v "' . $appPath . '" -o "' . $ipaPath . '" --sign "' . $developerIdentity . '" --embed "' . $provProfilePath . '" >> "' . $logPath . '"', FALSE, FALSE, TRUE);
 if ( ! file_exists($ipaPath)) die_with_error('Didn\'t create IPA file');
 
 ###########################################################
