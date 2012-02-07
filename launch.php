@@ -56,12 +56,6 @@ function exec_command($command, $returnAsString, $dieIfEmpty = TRUE, $echoComman
 }
 
 ###########################################################
-# Start
-###########################################################
-
-log_message("\033[32mAutomated iOS project deploy script for TestFlightApp.com\033[37m\n$projectName");
-
-###########################################################
 # Dirs
 ###########################################################
 
@@ -100,6 +94,12 @@ $logPath = $logDirPath . '/' . date('Y.m.d-H.i.s') . '.log';
 if ( ! file_exists($buildDirPath)) mkdir($buildDirPath);
 if ( ! file_exists($projectBuildDirPath)) mkdir($projectBuildDirPath);
 if ( ! file_exists($logDirPath)) mkdir($logDirPath);
+
+###########################################################
+# Start
+###########################################################
+
+log_message("\033[32mAutomated iOS project deploy script for TestFlightApp.com\033[37m\n$projectName");
 
 ###########################################################
 # Identity
