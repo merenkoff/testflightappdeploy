@@ -8,7 +8,7 @@
 ###########################################################
 
 # Paths
-define('SCRIPT_PATH', 'path/to/testflightappdeploy');
+define('SCRIPT_DIR_PATH', 'path/to/testflightappdeploy');
 
 # Xcode stuff
 define('TARGET_SDK', 'iphoneos');
@@ -22,4 +22,4 @@ define('TESTFLIGHT_DISTRIBUTION_LISTS', '');
 # Launch
 ###########################################################
 
-require_once(SCRIPT_PATH . '/launch.php');
+require_once(SCRIPT_DIR_PATH . '/launch.php');
