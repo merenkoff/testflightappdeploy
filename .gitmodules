@@ -1,0 +1,3 @@
+[submodule "xcodebuildprovisioning"]
+	path = xcodebuildprovisioning
+	url = https://github.com/mishakarpenko/xcodebuildprovisioning
