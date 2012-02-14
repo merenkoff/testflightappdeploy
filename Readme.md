@@ -1,6 +1,6 @@
 #Automated iOS project deploy script for testflightapp.com
 
-Script written in PHP. It gives you a list of developer identities and automatically finds a *.mobileprovision file for it.
+Script written in PHP. It gives you a list of developer identities to select from and automatically finds a *.mobileprovision file for it. Or you can specify both in the config.
 
 Feel free to send me your propositions and improvements.
 Will be useful to launch right after your VCS commit or push.
